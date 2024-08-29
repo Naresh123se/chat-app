@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function Auth({ children }: { children: React.ReactNode }) {
+export default function Auth({ children }: { children: React.ReactNode }) {
     return (
         <>
             {children}

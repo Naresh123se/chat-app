@@ -8,6 +8,7 @@ export const POST = async (req: Request) => {
         await dbConnection();
 
         const body = await req.json();
+        console.log(body)
         const { username, email, password } = body;
 
         // Check if the user already exists
