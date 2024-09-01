@@ -3,9 +3,11 @@ import { Loader2 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-
 import { useForm, SubmitHandler } from "react-hook-form"
 import { Button } from "./button"
+import { signIn } from "next-auth/react"
+import { useToast } from "@/components/ui/use-toast"
+
 
 type Login = {
     username: string
@@ -16,6 +18,7 @@ interface FormProps {
     type: "login" | "register"
 }
 
+
 export default function Form({ type }: FormProps) {
     const {
         register,
@@ -24,6 +27,7 @@ export default function Form({ type }: FormProps) {
     } = useForm<Login>()
     const router = useRouter();
     const [loader, setLoader] = useState(false)
+    const { toast } = useToast();
 
 
     const onSubmit: SubmitHandler<Login> = async (data) => {
@@ -38,7 +42,9 @@ export default function Form({ type }: FormProps) {
                 if (!res.ok) {
                     const errorData = await res.json(); // Assuming the API returns JSON with error details
                     console.error("An error occurred:", errorData.message);
-                    // Display error message or handle accordingly
+                    toast({
+                        title: 'Error registering',
+                    })
                     return;
                 }
                 router.push('/');
@@ -50,7 +56,29 @@ export default function Form({ type }: FormProps) {
                 setLoader(false);
             }
         }
-    }
+
+        if (type === "login") {
+            const res = await signIn("credentials", {
+                ...data,
+                redirect: false,
+            })
+
+            if (res?.ok) {
+                router.push("/chats");
+            }
+
+            if (res?.error) {
+                toast({
+                    title: "Error",
+                    description: 'Invalid Users',
+                    variant: 'default',
+                    className: 'text-[white] bg-red-500'
+                })
+            }
+        }
+    };
+
+
 
     return (
         <div className="flex justify-center p-4 sm:p-8">
@@ -83,7 +111,7 @@ export default function Form({ type }: FormProps) {
                     />
                     {errors.password && <span className="text-red-600">Password is required and must be less than 20 characters</span>}
                     <Button type="submit" className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-300"   >
-                        ok
+                        Register
                     </Button>
                     {loader && (
                         <Loader2 className="animate-spin " />
