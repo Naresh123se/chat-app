@@ -5,21 +5,18 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
-
-
-
 const TopBar = () => {
     const pathname = usePathname()
-    console.log(pathname)
-
     const handleLogOut = async () => {
         signOut({ callbackUrl: '/' })
     }
-
     const { data: session } = useSession()
     const user = session?.user;
+
     return (
-        <div className='topBar flex justify-between'>
+        <div className=' h-20 px-10 bg-slate-300'>
+
+        <div className='topBar flex justify-between items-center h-full'>
             <Link href='/chats'>
                 logo
             </Link>
@@ -30,10 +27,10 @@ const TopBar = () => {
             <div>
                 <LogOutIcon className='pointer' onClick={handleLogOut} />
             </div>
-
             <Image src={user?.profileImage || '/default.jpg'} alt='profile' width={40} height={40} className=' rounded-3xl'></Image>
         </div>
+        </div>
+
     )
 }
-
 export default TopBar
