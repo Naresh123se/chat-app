@@ -4,10 +4,8 @@ import React from 'react'
 const page = () => {
   return (
     <div>
-            <Form type="login" />
-
+      <Form type="login" />
     </div>
   )
 }
-
 export default page

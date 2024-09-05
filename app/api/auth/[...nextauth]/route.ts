@@ -1,9 +1,16 @@
 import NextAuth from "next-auth/next";
-import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import dbConnection from "@/app/lib/dbCon";
 import UserModel from "@/app/models/user";
+import { NextAuthOptions, Session } from "next-auth";
+
+interface MongoUser {
+    _id: string;
+    email: string;
+    password: string;
+    [key: string]: any; // Additional fields in user document
+  }
 
 const authOptions: NextAuthOptions = {
     providers: [CredentialsProvider({
@@ -45,27 +52,58 @@ const authOptions: NextAuthOptions = {
         }
     })],
 
+    // callbacks: {
+    //     async jwt({ token, user,session, trigger }) {
+    //         if(trigger === 'update' && session?.username){
+    //             token.username = session.username
+    //         }
+    //         if (user) {
+    //             token._id = user._id?.toString()
+    //             token.username = user.username
+    //         }
+    //         return token;
+    //     },
+    //     async session({ session, token }) {
+    //         if (token) {
+    //             session.user._id = token._id
+    //             session.user.username = token.username
+    //         }
+    //         return session
+    //     }
+    // },
+
     callbacks: {
-        async jwt({ token, user,session, trigger }) {
-            if(trigger === 'update' && session?.username){
-                token.username = session.username
-            }
-            if (user) {
-                token._id = user._id?.toString()
-                token.username = user.username
-            }
-            return token;
+        async jwt({ token, user }) {
+          if (user) {
+            token._id = user._id?.toString();
+            token.username = user.username;
+          }
+      
+          return token;
         },
+      
         async session({ session, token }) {
-            if (token) {
-                session.user._id = token._id
-                session.user.username = token.username
-            }
-            return session
+          // Fetch additional user data from MongoDB based on session email
+          const mongodbUser = await UserModel.findOne({ email: session.user?.email }) as MongoUser;
+      
+        //   if (mongodbUser) {
+        //     session.user = {
+        //       ...session.user,
+        //       ...mongodbUser._doc,
+        //       id: mongodbUser._id.toString(),
+        //     };
+        //   }
+      
+          // Also, populate session with token information
+          if (token) {
+            session.user._id =  mongodbUser._id.toString()
+            session.user.username = mongodbUser.username;
+          }
+      
+          return session;
         }
-    },
-
-
+      },
+      
     pages: {
         signIn: '/',
     },
