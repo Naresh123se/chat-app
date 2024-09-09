@@ -2,7 +2,7 @@
 
 import { GroupOutlined } from "@mui/icons-material";
 import { Loader2 } from "lucide-react";
-import { CldUploadButton } from "next-cloudinary";
+// import { CldUploadButton } from "next-cloudinary";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -45,9 +45,9 @@ const GroupInfo = () => {
     if (chatId) getChatDetails();
   }, [chatId]);
 
-  const uploadPhoto = (result) => {
-    setValue("groupPhoto", result?.info?.secure_url);
-  };
+  // const uploadPhoto = (result) => {
+  //   setValue("groupPhoto", result?.info?.secure_url);
+  // };
 
   const updateGroupChat = async (data) => {
     setLoading(true);
