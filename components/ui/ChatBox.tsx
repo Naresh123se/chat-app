@@ -7,7 +7,7 @@ interface ChatBox{
   _id: string;
 }
 
-const ChatBox = ({ chat, currentUser, currentChatId }) => {
+const ChatBox = ({ chat, currentUser, currentChatId }:any) => {
   const otherMembers = chat?.members?.filter(
     (member:ChatBox) => member._id !== currentUser._id
   );

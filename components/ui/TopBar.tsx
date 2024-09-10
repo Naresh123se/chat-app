@@ -22,7 +22,7 @@ const TopBar = () => {
                 </Link>
                 <div className="menu flex flex-row  gap-10">
                     <Link href='/chats' className={`${pathname === '/chats' ? ' text-red-500' : ''}`}>Chats</Link>
-                    <Link href='/contact' className={`${pathname === '/contact' ? ' text-red-500' : ''}`}>Contacts</Link>
+                    <Link href='/contacts' className={`${pathname === '/contacts' ? ' text-red-500' : ''}`}>Contacts</Link>
                 </div>
                 <div>
                     <LogOutIcon className='pointer' onClick={handleLogOut} />

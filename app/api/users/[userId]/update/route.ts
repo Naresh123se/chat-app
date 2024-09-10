@@ -1,7 +1,7 @@
 import dbConnection from "@/app/lib/dbCon";
 import UserModel from "@/app/models/user";
 
-export const POST = async (req: Request, { params }: { params: any }) => {
+export const POST = async (req: Request, { params }: { params: {userId:string} }) => {
     try {
         await dbConnection();
 

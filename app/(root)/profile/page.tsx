@@ -22,22 +22,22 @@ const Profile = () => {
     }, [user, reset]);
 
     // if (loading) return <div>Loading...</div>;
-    const updateUser = async (data:any) => {
+    const updateUser = async (data: any) => {
         setLoading(true);
         try {
-          const res = await fetch(`/api/users/${user?._id}/update`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          });
-    
-          setLoading(false);
+            const res = await fetch(`/api/users/${user?._id}/update`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+
+            setLoading(false);
         } catch (error) {
-          console.log(error);
+            console.log(error);
         }
-      };
+    };
 
     return (
         <div className='flex justify-center mt-10'>
@@ -67,7 +67,7 @@ const Profile = () => {
                         <p className='text-bold'>Upload new photo</p>
                     </div>
                     <Button className='btn' type='submit'>
-                    {loading && (
+                        {loading && (
                             <>
                                 <Loader2 className='animate-spin pt-0.5 pl-1' />
                             </>

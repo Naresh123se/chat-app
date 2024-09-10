@@ -18,7 +18,6 @@ interface FormProps {
     type: "login" | "register"
 }
 
-
 export default function Form({ type }: FormProps) {
     const {
         register,
@@ -58,27 +57,34 @@ export default function Form({ type }: FormProps) {
         }
 
         if (type === "login") {
-            const res = await signIn("credentials", {
-                ...data,
-                redirect: false,
-            })
-
-            if (res?.ok) {
-                router.push("/chats");
-            }
-
-            if (res?.error) {
-                toast({
-                    title: "Error",
-                    description: 'Invalid Users',
-                    variant: 'default',
-                    className: 'text-[white] bg-red-500'
+            setLoader(true);
+            try {
+                const res = await signIn("credentials", {
+                    ...data,
+                    redirect: false,
                 })
+
+                if (res?.ok) {
+                    router.push("/chats");
+                }
+
+                if (res?.error) {
+                    toast({
+                        title: "Error",
+                        description: 'Invalid Users',
+                        variant: 'default',
+                        className: 'text-[white] bg-red-500'
+                    })
+                }
+            } catch (error) {
+                console.log(error)
+
+            }
+            finally {
+                setLoader(false);
             }
         }
-    };
-
-
+    }
 
     return (
         <div className="flex justify-center p-4 sm:p-8">
@@ -141,14 +147,18 @@ export default function Form({ type }: FormProps) {
                     />
                     {errors.password && <span className="text-red-600">Password is required and must be less than 20 characters</span>}
 
-                    <input
+                    <Button
                         type="submit"
                         className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-300"
-                    />
+                        disabled = {loader}
+                    >Login
+                    {loader && (
+                        <Loader2 className="animate-spin ml-2 " />
+                    )}
+                    </Button>
                     <Link href='/register' className="link">Register </Link>
                 </form>
             )}
-
         </div>
     )
 }

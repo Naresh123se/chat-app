@@ -49,7 +49,7 @@ const GroupInfo = () => {
   //   setValue("groupPhoto", result?.info?.secure_url);
   // };
 
-  const updateGroupChat = async (data) => {
+  const updateGroupChat = async (data:any) => {
     setLoading(true);
     try {
       const res = await fetch(`/api/chats/${chatId}/update`, {
@@ -92,7 +92,6 @@ const GroupInfo = () => {
         </div>
         {errors?.name && (
           <p className="text-red-500" role="alert">
-            {errors.name.message}
           </p>
         )}
 
@@ -104,16 +103,10 @@ const GroupInfo = () => {
             height={160}
             className="w-40 h-40 rounded-full"
           />
-          <CldUploadButton
-            options={{ maxFiles: 1 }}
-            onUpload={uploadPhoto}
-            uploadPreset="upecg01j"
-          >
-            <p className="text-body-bold">Upload new photo</p>
-          </CldUploadButton>
+   
         </div>
 
-        <div className="flex flex-wrap gap-3">
+        {/* <div className="flex flex-wrap gap-3">
           {chat?.members?.length ? (
             chat.members.map((member, index) => (
               <p className="selected-contact" key={index}>
@@ -123,7 +116,7 @@ const GroupInfo = () => {
           ) : (
             <p>No members found.</p>
           )}
-        </div>
+        </div> */}
 
         <button className="btn" type="submit" disabled={loading}>
           {loading ? "Saving..." : "Save Changes"}
