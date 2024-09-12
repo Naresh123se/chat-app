@@ -1,10 +1,10 @@
 import { format } from "date-fns"
 import Image from "next/image"
 
-const MessageBox = ({ message, currentUser }) => {
+const MessageBox = ({ message, currentUser }:any) => {
   return message?.sender?._id !== currentUser._id ? (
     <div className="message-box">
-      <Image src={message?.sender?.profileImage || "/assets/person.jpg"} alt="profile photo" className="message-profilePhoto" />
+      <Image src={message?.sender?.profileImage || "/person.jpg"} width={60} height={60} alt="profile photo" className="message-profilePhoto" />
       <div className="message-info">
         <p className="text-small-bold">
           {message?.sender?.username} &#160; &#183; &#160; {format(new Date(message?.createdAt), "p")}

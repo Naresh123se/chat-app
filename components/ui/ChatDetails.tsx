@@ -5,13 +5,14 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 // import MessageBox from "./MessageBox";
 import { pusherClient } from "@/lib/pusher";
+import { Loader2 } from "lucide-react";
 interface Member {
     _id: string;
     name: string;
     // Add other properties relevant to your `member` object
   }
 
-const ChatDetails = ({ chatId }) => {
+const ChatDetails = ({ chatId }:any) => {
   const [loading, setLoading] = useState(true);
   const [chat, setChat] = useState({});
   const [otherMembers, setOtherMembers] = useState([]);
@@ -53,7 +54,7 @@ const ChatDetails = ({ chatId }) => {
         },
         body: JSON.stringify({
           chatId,
-          currentUserId: currentUser._id,
+          currentUserId: currentUser?._id,
           text,
         }),
       });
@@ -66,7 +67,7 @@ const ChatDetails = ({ chatId }) => {
     }
   };
 
-  const sendPhoto = async (result) => {
+  const sendPhoto = async (result:any) => {
     try {
       const res = await fetch("/api/messages", {
         method: "POST",
@@ -75,7 +76,7 @@ const ChatDetails = ({ chatId }) => {
         },
         body: JSON.stringify({
           chatId,
-          currentUserId: currentUser._id,
+          currentUserId: currentUser?._id,
           photo: result?.info?.secure_url,
         }),
       });
@@ -87,11 +88,11 @@ const ChatDetails = ({ chatId }) => {
   useEffect(() => {
     pusherClient.subscribe(chatId);
 
-    const handleMessage = async (newMessage) => {
+    const handleMessage = async (newMessage:any) => {
       setChat((prevChat) => {
         return {
           ...prevChat,
-          messages: [...prevChat.messages, newMessage],
+          messages: [...prevChat?.messages, newMessage],
         };
       });
     };
@@ -115,7 +116,7 @@ const ChatDetails = ({ chatId }) => {
   }, [chat?.messages]);
 
   return loading ? (
-    <Loader />
+    <Loader2 />
   ) : (
     <div className="pb-20">
       <div className="chat-details">
@@ -140,12 +141,13 @@ const ChatDetails = ({ chatId }) => {
           ) : (
             <>
               <img
-                src={otherMembers[0].profileImage || "/assets/person.jpg"}
+                src={otherMembers[0].profileImage || "/person.jpg"}
                 alt="profile photo"
+                width={60}
                 className="profilePhoto"
               />
               <div className="text">
-                <p>{otherMembers[0].username}</p>
+                <p>{otherMembers[0]?.username}</p>
               </div>
             </>
           )}
@@ -164,12 +166,12 @@ const ChatDetails = ({ chatId }) => {
 
         <div className="send-message">
           <div className="prepare-message">
-            <CldUploadButton
+            {/* <CldUploadButton
               options={{ maxFiles: 1 }}
               onUpload={sendPhoto}
               uploadPreset="upecg01j"
-            >
-              <AddPhotoAlternate
+            > */}
+              {/* <AddPhotoAlternate
                 sx={{
                   fontSize: "35px",
                   color: "#737373",
@@ -177,7 +179,7 @@ const ChatDetails = ({ chatId }) => {
                   "&:hover": { color: "red" },
                 }}
               />
-            </CldUploadButton>
+            </CldUploadButton> */}
 
             <input
               type="text"

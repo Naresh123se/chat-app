@@ -35,7 +35,8 @@ const ChatBox = ({ chat, currentUser, currentChatId }:any) => {
           />
         ) : (
           <Image
-            src={otherMembers[0].profileImage || "/assets/person.jpg"}
+            src={otherMembers[0].profileImage || "/person.jpg"}
+            width={60}
             alt="profile-photo"
             className="profilePhoto"
           />

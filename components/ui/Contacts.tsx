@@ -104,7 +104,8 @@ const Contacts = () => {
                   <RadioButtonUnchecked />
                 )}
                 <Image
-                  src={user.profileImage || "/assets/person.jpg"}
+                  src={user.profileImage || "/person.jpg"}
+                  width={60} height={60}
                   alt="profile"
                   className="profilePhoto"
                 />

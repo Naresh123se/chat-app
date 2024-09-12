@@ -95,13 +95,21 @@ import { use, useEffect, useState } from "react";
 import ChatBox from "./ChatBox";
 import { pusherClient } from "@/lib/pusher";
 import { Loader2 } from "lucide-react";
+type Chat = {
+  _id: string;
+  messages: any[]; // Define more specific type for messages if possible
+};
+interface ChatListProps {
+  currentChatId: string; // Or whatever type the ID should be
+}
 
-const ChatList = ({ currentChatId }) => {
+const ChatList = ({ currentChatId }: ChatListProps) => {
   const { data: sessions } = useSession();
   const currentUser = sessions?.user;
 
   const [loading, setLoading] = useState(true);
-  const [chats, setChats] = useState([]);
+  const [chats, setChats] = useState<Chat[]>([]);
+
   const [search, setSearch] = useState("");
 
   const getChats = async () => {
@@ -126,35 +134,36 @@ const ChatList = ({ currentChatId }) => {
   }, [currentUser, search]);
 
   useEffect(() => {
-    if (currentUser) {
-      pusherClient.subscribe(currentUser?._id);
+    if (currentUser && currentUser._id) {
+      pusherClient.subscribe(currentUser._id);
 
-      const handleChatUpdate = (updatedChat) => {
-        setChats((allChats) =>
-          allChats.map((chat) => {
-            if (chat._id === updatedChat.id) {
-              return { ...chat, messages: updatedChat.messages };
-            } else {
-              return chat;
-            }
-          })
+      const handleChatUpdate = (updatedChat: Chat) => {
+        setChats((allChats: any) =>
+          allChats.map((chat: any) =>
+            chat._id === updatedChat._id
+              ? { ...chat, messages: updatedChat.messages }
+              : chat
+          )
         );
       };
 
-      const handleNewChat = (newChat) => {
-        setChats((allChats) => [...allChats, newChat]);
-      }
+      const handleNewChat = (newChat: Chat) => {
+        setChats((allChats: Chat[]) => [...allChats, newChat]);
+      };
 
       pusherClient.bind("update-chat", handleChatUpdate);
       pusherClient.bind("new-chat", handleNewChat);
 
       return () => {
-        pusherClient.unsubscribe(currentUser._id);
-        pusherClient.unbind("update-chat", handleChatUpdate);
-        pusherClient.unbind("new-chat", handleNewChat);
+        if (currentUser._id) {
+          pusherClient.unsubscribe(currentUser._id);
+          pusherClient.unbind("update-chat", handleChatUpdate);
+          pusherClient.unbind("new-chat", handleNewChat);
+        }
       };
     }
   }, [currentUser]);
+
 
   return loading ? (
     <Loader2 />
